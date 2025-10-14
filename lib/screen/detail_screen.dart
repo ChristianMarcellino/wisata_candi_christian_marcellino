@@ -40,6 +40,7 @@ class detailScreen extends StatelessWidget {
         Padding(
               padding: EdgeInsets.symmetric(horizontal: 16),
               child: Column(
+                crossAxisAlignment : CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 16),
                   Row(
@@ -90,8 +91,47 @@ class detailScreen extends StatelessWidget {
                       Text(": ${placeholder.type}",)
                     ],
                     ),
+                    SizedBox(height : 16),
+                    Divider(color : Colors.deepPurple.shade100),
+                    SizedBox(height : 16),
                 ],
               ),
+              ),
+              Padding(
+                padding : const EdgeInsets.all(15),
+                child : Column(
+                  crossAxisAlignment : CrossAxisAlignment.start,
+                  children : [
+                    Divider(color : Colors.deepPurple.shade100),
+                    Text("Galeri", style : TextStyle(
+                      fontSize : 16, fontWeight : FontWeight.bold,
+                    )),
+                    SizedBox(height : 10),
+                    SizedBox(
+                      height : 100, 
+                      child : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount : placeholder.imageUrls.length,
+                        itemBuilder : (context, index){
+                          return Padding(
+                            padding : EdgeInsets.only(right : 8),
+                            child : GestureDetector(
+                              onTap : () {},
+                              child : Container(
+                                decoration : BoxDecoration(),
+                                child : CachedNetworkImage(
+                                  imageUrl : placeholder.imageUrls[index]
+                                ),
+                              )
+                            )
+                            )
+                        })),
+                    SizedBox(height : 4),
+                    Text("Tap untuk memperbesar", style : TextStyle(
+                      fontSize : 12, color : Colors.black54
+                    )),
+                  ]
+                )
               )
       ],
      ), 
