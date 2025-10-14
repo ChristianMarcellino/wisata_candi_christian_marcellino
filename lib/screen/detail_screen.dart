@@ -8,7 +8,8 @@ class detailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-     body: Column(
+     body: SingleChildScrollView(
+      Column(
       children: [
         Stack(
           children: [
@@ -119,8 +120,20 @@ class detailScreen extends StatelessWidget {
                               onTap : () {},
                               child : Container(
                                 decoration : BoxDecoration(),
-                                child : CachedNetworkImage(
-                                  imageUrl : placeholder.imageUrls[index]
+                                child : ClipRRect(
+                                  borderRadius : BorderRadius.circular(10),
+                                  child : CachedNetworkImage(
+                                    imageUrl : placeholder.imageUrls[index],
+                                    height : 120,
+                                    width : 120,
+                                    fit : BoxFit.cover,
+                                    placeholder : (context, url) => Container(
+                                      height : 120,
+                                      width : 120,
+                                      color : Colors.deepPurple[50],
+                                    ),
+                                    errorWidget : (context, url, error) => Icon(Icons.error),
+                                  ),
                                 ),
                               )
                             )
@@ -135,6 +148,7 @@ class detailScreen extends StatelessWidget {
               )
       ],
      ), 
+     ),
     );
   }
 }
