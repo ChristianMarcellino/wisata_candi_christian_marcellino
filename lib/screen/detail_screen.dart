@@ -1,14 +1,17 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:wisata_candi/models/candi.dart';
-class detailScreen extends StatelessWidget {
+import 'package:wisata_candi/screen/profile_screen.dart';
+class DetailScreen extends StatelessWidget {
 
   final Candi placeholder;
 
-  const detailScreen({super.key, required this.placeholder});
+  const DetailScreen({super.key, required this.placeholder});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
      body: SingleChildScrollView(
+      child : (
       Column(
       children: [
         Stack(
@@ -95,6 +98,25 @@ class detailScreen extends StatelessWidget {
                     SizedBox(height : 16),
                     Divider(color : Colors.deepPurple.shade100),
                     SizedBox(height : 16),
+                    Row(
+                      children: [
+                        Text("Deskripsi", style:TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold
+                        )
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 16,),
+                    Wrap(
+                      children: [
+                        Text(placeholder.description, 
+                        style: TextStyle(                      
+                        
+                        ) 
+                        ,)
+                      ],
+                      )
                 ],
               ),
               ),
@@ -143,7 +165,7 @@ class detailScreen extends StatelessWidget {
                                 ),
                               )
                             )
-                            )
+                            );
                         })),
                     SizedBox(height : 4),
                     Text("Tap untuk memperbesar", style : TextStyle(
@@ -151,8 +173,25 @@ class detailScreen extends StatelessWidget {
                     )),
                   ]
                 )
+              ),
+              Row(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.all(8),
+                    child: ElevatedButton(onPressed: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder: (context) => const ProfileScreen(),
+                        ),
+                      );
+                    }, child: Icon(Icons.person),
+                        )
+                    ),
+                     
+                ],
               )
       ],
+      )
      ), 
      ),
     );
