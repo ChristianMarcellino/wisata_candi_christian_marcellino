@@ -1,4 +1,8 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:wisata_candi/screen/detail_screen.dart';
 import 'package:wisata_candi/data/candi_data.dart';
 import 'package:wisata_candi/widget/profile_info_item.dart';
@@ -11,6 +15,52 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String _imageFile = "";
+  final picker = ImagePicker();
+  Future<void> _getImage(ImageSource source) async {
+    final pickedFile = await picker.pickImage(source: source);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = pickedFile.path;
+      });
+    }
+  }
+
+  void _showPicker() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              title: Text(
+                "Image Source",
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.photo),
+              title: Text("Gallery"),
+              onTap: () {
+                Navigator.of(context).pop();
+                _getImage(ImageSource.gallery);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.camera_alt),
+              title: Text("Camera"),
+              onTap: () {
+                Navigator.of(context).pop();
+                _getImage(ImageSource.camera);
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   bool isSignedIn = false;
   String fullName = "Wawan Setiawan";
   String userName = "Wawan HekerTzy";
@@ -58,15 +108,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             shape: BoxShape.circle,
                           ),
                           child: CircleAvatar(
-                            backgroundImage: AssetImage(
-                              'images/placeholder_image.png',
-                            ),
+                            backgroundImage: _imageFile.isNotEmpty
+                                ? kIsWeb
+                                      ? NetworkImage(_imageFile)
+                                      : FileImage(File(_imageFile))
+                                : AssetImage('images/placeholder_image.png'),
                             radius: 50,
                           ),
                         ),
                         if (isSignedIn)
                           IconButton(
-                            onPressed: () {},
+                            onPressed: _showPicker,
                             icon: Icon(
                               Icons.camera_alt,
                               color: Colors.deepPurple[80],
@@ -88,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         label: "Pengguna",
                         value: userName,
                         iconColor: Colors.yellow,
-                        onEditPressed: (){
+                        onEditPressed: () {
                           debugPrint("wawan");
                         },
                         showEditIcon: true,
@@ -99,7 +151,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         label: "Nama",
                         value: fullName,
                         iconColor: Colors.blueAccent,
-                        onEditPressed: (){
+                        onEditPressed: () {
                           debugPrint("wawan");
                         },
                         showEditIcon: true,
@@ -108,9 +160,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ProfileInfoItem(
                         icon: Icons.favorite,
                         label: "Favorit",
-                        value: favCandiCount == 0 ? "Tidak ada candi favorit" : favCandiCount.toString(),
+                        value: favCandiCount == 0
+                            ? "Tidak ada candi favorit"
+                            : favCandiCount.toString(),
                         iconColor: Colors.redAccent,
-                        onEditPressed: (){
+                        onEditPressed: () {
                           debugPrint("wawan");
                         },
                         showEditIcon: true,

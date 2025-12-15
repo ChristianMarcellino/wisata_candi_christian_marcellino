@@ -22,11 +22,14 @@ class ItemCard extends StatelessWidget {
         child: Column(
           children: [
             Expanded(
-              child: ClipRRect(
-                child: Image.asset(
-                  candi.imageAsset, 
-                width: double.infinity,
-                fit: BoxFit.cover,
+              child: Hero(
+                tag: candi.imageAsset,
+                child: ClipRRect(
+                  child: Image.asset(
+                    candi.imageAsset, 
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
