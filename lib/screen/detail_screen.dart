@@ -16,7 +16,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool isFavorite = false;
   bool isSignedIn = false;
   final DatabaseHelper _dbHelper = DatabaseHelper();
   late Candi currentCandi;
@@ -27,7 +26,6 @@ class _DetailScreenState extends State<DetailScreen> {
     currentCandi = widget.placeholder;
     _checkSignInStatus();
     _loadCandiData();
-    _loadFavoriteStatus();
   }
 
   void _checkSignInStatus() async {
@@ -44,7 +42,6 @@ class _DetailScreenState extends State<DetailScreen> {
       if (candi != null) {
         setState(() {
           currentCandi = candi;
-          isFavorite = candi.isFavorite;
         });
       }
     }

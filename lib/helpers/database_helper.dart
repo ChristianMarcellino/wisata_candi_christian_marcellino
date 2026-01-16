@@ -131,7 +131,7 @@ class DatabaseHelper {
     final db = await database;
     return await db.update(
       'candi',
-      {'isFavorite': isFavorite ? 1 : 0},
+      {'isFavorite': isFavorite ? 0 : 1},
       where: 'id = ?',
       whereArgs: [id],
     );
