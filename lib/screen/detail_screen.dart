@@ -1,10 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wisata_candi/Helpers/database_helper.dart';
+import 'package:wisata_candi/helpers/database_helper.dart';
 import 'package:wisata_candi/models/candi.dart';
-import 'package:wisata_candi/screen/profile_screen.dart';
-import 'package:wisata_candi/screen/sign_in_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final Candi placeholder;
@@ -16,7 +14,6 @@ class DetailScreen extends StatefulWidget {
 }
 
 class _DetailScreenState extends State<DetailScreen> {
-  bool isFavorite = false;
   bool isSignedIn = false;
   final DatabaseHelper _dbHelper = DatabaseHelper();
   late Candi currentCandi;
@@ -27,10 +24,9 @@ class _DetailScreenState extends State<DetailScreen> {
     currentCandi = widget.placeholder;
     _checkSignInStatus();
     _loadCandiData();
-    _loadFavoriteStatus();
   }
 
-  void _checkSignInStatus() async {
+  Future<void> _checkSignInStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool signedIn = prefs.getBool('isSignedIn') ?? false;
     setState(() {
@@ -44,7 +40,6 @@ class _DetailScreenState extends State<DetailScreen> {
       if (candi != null) {
         setState(() {
           currentCandi = candi;
-          isFavorite = candi.isFavorite;
         });
       }
     }
@@ -258,23 +253,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ],
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: Icon(Icons.person),
-                  ),
-                ),
-              ],
             ),
           ],
         )),

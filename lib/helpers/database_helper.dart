@@ -4,7 +4,7 @@ import '../models/candi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' show Platform;
+import 'dart:io' as io;
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
@@ -34,7 +34,7 @@ class DatabaseHelper {
       );
     }
 
-    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
+    if (io.Platform.isWindows || io.Platform.isLinux || io.Platform.isMacOS) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
       final appDocumentsDirectory = await getApplicationDocumentsDirectory();
@@ -131,7 +131,7 @@ class DatabaseHelper {
     final db = await database;
     return await db.update(
       'candi',
-      {'isFavorite': isFavorite ? 1 : 0},
+      {'isFavorite': isFavorite ? 0 : 1},
       where: 'id = ?',
       whereArgs: [id],
     );

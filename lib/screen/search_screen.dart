@@ -13,7 +13,6 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  // TODO 1. Deklarasi variabel yang diperlukan
   List<Candi> _filteredCandis = candiList;
   List<Candi> _allCandis = [];
   String searchQuery = '';
