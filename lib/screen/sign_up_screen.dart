@@ -1,78 +1,112 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wisata_candi/screen/home_screen.dart';
-import 'package:wisata_candi/screen/sign_up_screen.dart';
+import 'package:wisata_candi/main.dart';
+import 'package:wisata_candi/screen/sign_in_screen.dart';
 
-class SignInScreen extends StatefulWidget {
-  SignInScreen({super.key});
+class SignUpScreen extends StatefulWidget {
+  const SignUpScreen({super.key});
 
   @override
-  State<SignInScreen> createState() => _SignInScreenState();
+  State<SignUpScreen> createState() => _SignUpScreenState();
 }
 
-class _SignInScreenState extends State<SignInScreen> {
+class _SignUpScreenState extends State<SignUpScreen> {
   // TODO 1 : Deklarasi Variabel
-  final TextEditingController _usernameController = TextEditingController();
-
+  final TextEditingController _fullnameController = TextEditingController();
+  final TextEditingController _namaPenggunaController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  String _errorText = '';
-
   bool _isSignedIn = false;
-
   bool _obscurePassword = true;
 
-  void _signIn() async {
+  String _errorTextFullname = '';
+  String _errorTextUsername = '';
+  String _errorTextPassword = '';
+
+  // TODO : Membuat _signUp
+  void _signUp() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final String savedUsername = prefs.getString('username') ?? '';
-    final String savedPassword = prefs.getString('password') ?? '';
-    final String enteredUsername = _usernameController.text.trim();
-    final String enteredPassword = _passwordController.text.trim();
+    String fullName = _fullnameController.text.trim();
+    String username = _namaPenggunaController.text.trim();
+    String password = _passwordController.text.trim();
 
-    if (enteredUsername.isEmpty || enteredPassword.isEmpty) {
+    if (fullName.isEmpty || username.isEmpty || password.isEmpty) {
       setState(() {
-        _errorText = 'Nama Pengguna dan Kata Sandi harus diisi.';
+        _errorTextFullname = "Semua Field harus di isi!";
+        _errorTextPassword = "Semua Field harus di isi!";
+        _errorTextUsername = "Semua Field harus di isi!";
       });
       return;
     }
 
-    if (savedUsername.isEmpty || savedPassword.isEmpty) {
+    if (fullName.length < 3) {
       setState(() {
-        _errorText = 'Akun tidak ditemukan. Silakan daftar terlebih dahulu.';
+        _errorTextFullname = "Nama Lengkap minimal 3 karakter!";
       });
       return;
     }
 
-    if (enteredUsername == savedUsername && enteredPassword == savedPassword) {
+    if (username.length < 3) {
       setState(() {
-        _isSignedIn = true;
-        _errorText = '';
+        _errorTextUsername = "Username minimal 3 karakter!";
       });
-      await prefs.setBool('isSignedIn', true);
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
-      });
-
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute<void>(builder: (context) => HomeScreen()),
-        );
-      });
-    } else {
-      setState(() {
-        _errorText = 'Nama Pengguna atau Kata Sandi salah.';
-      });
+      return;
     }
+
+    String? existingUsername = prefs.getString('username');
+    if (existingUsername != null && existingUsername == username) {
+      setState(() {
+        _errorTextUsername = 'Username sudah terdaftar';
+      });
+      return;
+    }
+
+    if (password.length < 8 ||
+        !password.contains(RegExp(r'[A-Z]')) ||
+        !password.contains(RegExp(r'[a-z]')) ||
+        !password.contains(RegExp(r'[0-9]')) ||
+        !password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+      setState(() {
+        _errorTextPassword =
+            'Minimal 8 Karakter dengan Huruf Kapital, kecil, dan angka, serta simbol!';
+      });
+      return;
+    }
+
+    prefs.setString('fullName', fullName);
+    prefs.setString('username', username);
+    prefs.setString('password', password);
+    prefs.setBool('isSignedIn', true);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Sign Up berhasil'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MainScreen()),
+    );
+  }
+
+  // TODO : Membuat dispose
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _fullnameController.dispose();
+    _namaPenggunaController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       //TODO 2 : AppBar
-      appBar: AppBar(title: Text('Sign In')),
+      appBar: AppBar(title: Text('Sign Up')),
       // TODO 3 : Body
       body: Center(
         child: SingleChildScrollView(
@@ -85,12 +119,22 @@ class _SignInScreenState extends State<SignInScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center, // Horizontal
 
                 children: [
-                  // TODO 5 : TextFormField Username
+                  // TODO 5 : TextFormField fullName
                   TextFormField(
-                    controller: _usernameController,
+                    controller: _fullnameController,
                     decoration: InputDecoration(
-                      labelText: 'Username',
+                      labelText: 'Nama Lengkap',
                       border: OutlineInputBorder(),
+                      errorText: _errorTextFullname,
+                    ),
+                  ),
+                  SizedBox(height: 16),
+                  TextFormField(
+                    controller: _namaPenggunaController,
+                    decoration: InputDecoration(
+                      labelText: 'Nama Pengguna',
+                      border: OutlineInputBorder(),
+                      errorText: _errorTextUsername,
                     ),
                   ),
                   // TODO 6 : TextFormField Password
@@ -100,7 +144,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     decoration: InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(),
-                      errorText: _errorText.isNotEmpty ? _errorText : null,
+                      errorText: _errorTextPassword,
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {
@@ -120,20 +164,20 @@ class _SignInScreenState extends State<SignInScreen> {
                   SizedBox(height: 16),
                   ElevatedButton(
                     onPressed: () {
-                      _signIn();
+                      _signUp();
                     },
-                    child: Text('Sign In'),
+                    child: Text('Sign Up'),
                   ),
 
                   // TODO 8 : Text Sign Up
                   SizedBox(height: 10),
                   RichText(
                     text: TextSpan(
-                      text: "No Account? ",
+                      text: "Sudah punya akun? ",
                       style: TextStyle(fontSize: 16, color: Colors.deepPurple),
                       children: [
                         TextSpan(
-                          text: 'Sign Up',
+                          text: 'Sign In',
                           style: TextStyle(
                             fontSize: 16,
                             color: Colors.blue,
@@ -144,7 +188,7 @@ class _SignInScreenState extends State<SignInScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute<void>(
-                                  builder: (context) => SignUpScreen(),
+                                  builder: (context) => SignInScreen(),
                                 ),
                               );
                             },

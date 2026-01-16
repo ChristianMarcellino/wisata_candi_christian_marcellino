@@ -1,15 +1,59 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wisata_candi/Helpers/database_helper.dart';
 import 'package:wisata_candi/models/candi.dart';
 import 'package:wisata_candi/screen/profile_screen.dart';
+import 'package:wisata_candi/screen/sign_in_screen.dart';
 
-class DetailScreen extends StatelessWidget {
+class DetailScreen extends StatefulWidget {
   final Candi placeholder;
 
   const DetailScreen({super.key, required this.placeholder});
+
+  @override
+  State<DetailScreen> createState() => _DetailScreenState();
+}
+
+class _DetailScreenState extends State<DetailScreen> {
+  bool isFavorite = false;
+  bool isSignedIn = false;
+  final DatabaseHelper _dbHelper = DatabaseHelper();
+  late Candi currentCandi;
+
+  @override
+  void initState() {
+    super.initState();
+    currentCandi = widget.placeholder;
+    _checkSignInStatus();
+    _loadCandiData();
+    _loadFavoriteStatus();
+  }
+
+  void _checkSignInStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool signedIn = prefs.getBool('isSignedIn') ?? false;
+    setState(() {
+      isSignedIn = signedIn;
+    });
+  }
+
+  Future<void> _loadCandiData() async {
+    if (widget.placeholder.id != null) {
+      final candi = await _dbHelper.getCandiById(widget.placeholder.id!);
+      if (candi != null) {
+        setState(() {
+          currentCandi = candi;
+          isFavorite = candi.isFavorite;
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text(currentCandi.name)),
       body: SingleChildScrollView(
         child: (Column(
           children: [
@@ -18,11 +62,11 @@ class DetailScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 8.0),
                   child: Hero(
-                    tag: placeholder.imageAsset,
+                    tag: currentCandi.imageAsset,
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(20),
                       child: Image.asset(
-                        placeholder.imageAsset,
+                        currentCandi.imageAsset,
                         width: double.infinity,
                         height: 300,
                         fit: BoxFit.cover,
@@ -40,12 +84,6 @@ class DetailScreen extends StatelessWidget {
                       color: Colors.deepPurple[100]?.withOpacity(0.8),
                       shape: BoxShape.circle,
                     ),
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      icon: Icon(Icons.arrow_back),
-                    ),
                   ),
                 ),
               ],
@@ -59,11 +97,41 @@ class DetailScreen extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(placeholder.name),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.favorite_border),
-                      ),
+                      Text(currentCandi.name),
+                      currentCandi.isFavorite
+                          ? IconButton(
+                              onPressed: () async {
+                                if (currentCandi.id != null) {
+                                  await _dbHelper.toggleFavorite(
+                                    currentCandi.id!,
+                                    currentCandi.isFavorite,
+                                  );
+                                  setState(() {
+                                    currentCandi.isFavorite =
+                                        !currentCandi.isFavorite;
+                                  });
+                                }
+                              },
+                              icon: Icon(Icons.favorite, color: Colors.red),
+                            )
+                          : IconButton(
+                              onPressed: () async {
+                                if (currentCandi.id != null) {
+                                  await _dbHelper.toggleFavorite(
+                                    currentCandi.id!,
+                                    currentCandi.isFavorite,
+                                  );
+                                  setState(() {
+                                    currentCandi.isFavorite =
+                                        !currentCandi.isFavorite;
+                                  });
+                                }
+                              },
+                              icon: Icon(
+                                Icons.favorite_border_outlined,
+                                color: Colors.red,
+                              ),
+                            ),
                     ],
                   ),
                   SizedBox(height: 16),
@@ -78,7 +146,7 @@ class DetailScreen extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(": ${placeholder.location}"),
+                      Text(": ${currentCandi.location}"),
                     ],
                   ),
                   Row(
@@ -92,7 +160,7 @@ class DetailScreen extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(": ${placeholder.built}"),
+                      Text(": ${currentCandi.built}"),
                     ],
                   ),
                   Row(
@@ -106,7 +174,7 @@ class DetailScreen extends StatelessWidget {
                           style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Text(": ${placeholder.type}"),
+                      Text(": ${currentCandi.type}"),
                     ],
                   ),
                   SizedBox(height: 16),
@@ -126,7 +194,7 @@ class DetailScreen extends StatelessWidget {
                   SizedBox(height: 16),
                   Wrap(
                     children: [
-                      Text(placeholder.description, style: TextStyle()),
+                      Text(currentCandi.description, style: TextStyle()),
                     ],
                   ),
                 ],
@@ -147,7 +215,7 @@ class DetailScreen extends StatelessWidget {
                     height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: placeholder.imageUrls.length,
+                      itemCount: currentCandi.imageUrls.length,
                       itemBuilder: (context, index) {
                         return Padding(
                           padding: EdgeInsets.only(right: 8),
@@ -164,7 +232,7 @@ class DetailScreen extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: CachedNetworkImage(
-                                  imageUrl: placeholder.imageUrls[index],
+                                  imageUrl: currentCandi.imageUrls[index],
                                   height: 120,
                                   width: 120,
                                   fit: BoxFit.cover,

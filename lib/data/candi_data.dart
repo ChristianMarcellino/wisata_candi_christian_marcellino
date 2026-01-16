@@ -16,6 +16,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/11/cd/47/0e/borobudur-sunset-moment.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Mendut',
@@ -32,6 +34,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/07/64/89/fe/candi-mendut-temple.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Prambanan',
@@ -48,6 +52,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/11/cd/21/a1/prambanan-yang-luas-dan.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Lumbung',
@@ -64,6 +70,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/28/11/e1/33/lumbung-temple.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Sewu',
@@ -80,6 +88,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/16/10/f6/55/20181224-104447-largejpg.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Kalasan',
@@ -96,6 +106,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/0d/bd/3b/88/20161127-152738-largejpg.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Sari',
@@ -112,6 +124,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/13/46/09/6d/high-wall.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Plaosan',
@@ -128,6 +142,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/28/14/e5/d4/caption.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Singosari',
@@ -144,6 +160,8 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/15/a2/c0/88/singosari-temple-kala.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
   Candi(
     name: 'Candi Jago',
@@ -160,5 +178,7 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/05/60/f6/e5/jhago-temple.jpg',
     ],
     isFavorite: false,
+    sumFavorite: 100,
+    visitingHours: "200",
   ),
 ];

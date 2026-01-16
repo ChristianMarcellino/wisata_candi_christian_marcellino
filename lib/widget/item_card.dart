@@ -11,8 +11,10 @@ class ItemCard extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.push(
-          context, 
-          MaterialPageRoute(builder: (context) => DetailScreen(placeholder: candi))
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailScreen(placeholder: candi),
+          ),
         );
       },
       child: Card(
@@ -26,20 +28,23 @@ class ItemCard extends StatelessWidget {
                 tag: candi.imageAsset,
                 child: ClipRRect(
                   child: Image.asset(
-                    candi.imageAsset, 
-                  width: double.infinity,
-                  fit: BoxFit.cover,
+                    candi.imageAsset,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top : 8.0, left:16),
-              child: Text(candi.name, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),),
+              padding: const EdgeInsets.only(top: 8.0, left: 16),
+              child: Text(
+                candi.name,
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom : 8.0, left:16),
-              child: Text(candi.type, style: TextStyle(fontSize: 12),),
+              padding: const EdgeInsets.only(bottom: 8.0, left: 16),
+              child: Text(candi.type, style: TextStyle(fontSize: 12)),
             ),
           ],
         ),

@@ -3,8 +3,9 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wisata_candi/screen/detail_screen.dart';
-import 'package:wisata_candi/data/candi_data.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wisata_candi/Helpers/database_helper.dart';
+import 'package:wisata_candi/screen/sign_in_screen.dart';
 import 'package:wisata_candi/widget/profile_info_item.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -15,8 +16,13 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String _imageFile = "";
+  bool isSignedIn = true;
+  String fullName = '';
+  String userName = '';
+  int favoriteCandiCount = 0;
+  String _imageFile = '';
   final picker = ImagePicker();
+
   Future<void> _getImage(ImageSource source) async {
     final pickedFile = await picker.pickImage(source: source);
     if (pickedFile != null) {
@@ -26,10 +32,54 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    final prefs = await SharedPreferences.getInstance();
+    setState(() {
+      fullName = prefs.getString('fullName') ?? '';
+      userName = prefs.getString('username') ?? '';
+      isSignedIn = prefs.getBool('isSignedIn') ?? false;
+      favoriteCandiCount = 0;
+    });
+    final dbHelper = DatabaseHelper();
+    final favoriteCandis = await dbHelper.getFavoriteCandi();
+    setState(() {
+      favoriteCandiCount = favoriteCandis.length;
+    });
+  }
+
+  void signIn() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => SignInScreen()),
+    );
+  }
+
+  Future<void> signOut() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isSignedIn', false);
+
+    setState(() {
+      isSignedIn = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Berhasil Sign Out'),
+        backgroundColor: Colors.green,
+        duration: Duration(seconds: 2),
+      ),
+    );
+  }
+
   void _showPicker() {
     showModalBottomSheet(
       context: context,
-      builder: (context) {
+      builder: (BuildContext context) {
         return Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -40,42 +90,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
             ListTile(
-              leading: Icon(Icons.photo),
+              leading: Icon(Icons.photo_library_outlined),
               title: Text("Gallery"),
               onTap: () {
-                Navigator.of(context).pop();
-                _getImage(ImageSource.gallery);
+                Navigator.of(context).pop(_getImage(ImageSource.gallery));
               },
             ),
             ListTile(
-              leading: Icon(Icons.camera_alt),
+              leading: Icon(Icons.photo_library_outlined),
               title: Text("Camera"),
               onTap: () {
-                Navigator.of(context).pop();
-                _getImage(ImageSource.camera);
+                Navigator.of(context).pop(_getImage(ImageSource.camera));
               },
             ),
           ],
         );
       },
     );
-  }
-
-  bool isSignedIn = false;
-  String fullName = "Wawan Setiawan";
-  String userName = "Wawan HekerTzy";
-  int favCandiCount = 0;
-
-  void signIn() {
-    setState(() {
-      isSignedIn = !isSignedIn;
-    });
-  }
-
-  void signOut() {
-    setState(() {
-      isSignedIn = !isSignedIn;
-    });
   }
 
   @override
@@ -86,23 +117,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Container(
             height: 200,
             width: double.infinity,
-            color: Colors.deepPurple,
+            color: Colors.lightBlue[100],
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
               children: [
                 Align(
                   alignment: Alignment.topCenter,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 150),
+                    padding: const EdgeInsets.only(top: 200 - 50),
                     child: Stack(
                       alignment: Alignment.bottomRight,
                       children: [
                         Container(
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: Colors.deepPurple,
+                              color: Colors.lightBlue,
                               width: 2,
                             ),
                             shape: BoxShape.circle,
@@ -121,7 +152,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onPressed: _showPicker,
                             icon: Icon(
                               Icons.camera_alt,
-                              color: Colors.deepPurple[80],
+                              color: Colors.deepPurple[60],
                             ),
                           ),
                       ],
@@ -129,77 +160,46 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 SizedBox(height: 20),
-                Divider(color: Colors.deepPurple.shade100),
-                SizedBox(height: 8),
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Column(
-                    children: [
-                      ProfileInfoItem(
-                        icon: Icons.lock,
-                        label: "Pengguna",
-                        value: userName,
-                        iconColor: Colors.yellow,
-                        onEditPressed: () {
-                          debugPrint("wawan");
-                        },
-                        showEditIcon: true,
-                      ),
-                      SizedBox(height: 18),
-                      ProfileInfoItem(
-                        icon: Icons.person,
-                        label: "Nama",
-                        value: fullName,
-                        iconColor: Colors.blueAccent,
-                        onEditPressed: () {
-                          debugPrint("wawan");
-                        },
-                        showEditIcon: true,
-                      ),
-                      SizedBox(height: 18),
-                      ProfileInfoItem(
-                        icon: Icons.favorite,
-                        label: "Favorit",
-                        value: favCandiCount == 0
-                            ? "Tidak ada candi favorit"
-                            : favCandiCount.toString(),
-                        iconColor: Colors.redAccent,
-                        onEditPressed: () {
-                          debugPrint("wawan");
-                        },
-                        showEditIcon: true,
-                      ),
-                      isSignedIn
-                          ? TextButton(
-                              onPressed: signOut,
-                              child: Text("Sign Out"),
-                            )
-                          : TextButton(
-                              onPressed: signIn,
-                              child: Text("Sign In"),
-                            ),
-                    ],
-                  ),
+                Divider(color: Colors.grey),
+                SizedBox(height: 4),
+                ProfileInfoItem(
+                  icon: Icons.lock,
+                  label: 'Pengguna',
+                  value: userName,
+                  iconColor: Colors.amber,
                 ),
-              ],
-            ),
-          ),
+                SizedBox(height: 4),
+                Divider(color: Colors.grey),
+                SizedBox(height: 4),
 
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.all(8),
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder: (context) =>
-                          DetailScreen(placeholder: candiList[0]),
-                    ),
-                  );
-                },
-                child: Icon(Icons.house),
-              ),
+                ProfileInfoItem(
+                  icon: Icons.person,
+                  label: 'Nama',
+                  value: fullName,
+                  showEditIcon: isSignedIn,
+                  onEditPressed: () {
+                    debugPrint('Icon edit ditekan');
+                  },
+                  iconColor: Colors.blue,
+                ),
+                SizedBox(height: 4),
+                Divider(color: Colors.grey),
+                SizedBox(height: 4),
+                ProfileInfoItem(
+                  icon: Icons.favorite,
+                  label: 'Favorit',
+                  value: favoriteCandiCount > 0
+                      ? '$favoriteCandiCount'
+                      : 'Belum Ada Candi Favorit',
+                  iconColor: Colors.red,
+                ),
+                SizedBox(height: 4),
+                Divider(color: Colors.grey),
+                SizedBox(height: 20),
+                isSignedIn
+                    ? TextButton(onPressed: signOut, child: Text('Sign Out'))
+                    : TextButton(onPressed: signIn, child: Text('Sign in')),
+              ],
             ),
           ),
         ],
