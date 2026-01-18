@@ -138,7 +138,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         color: Colors.blue,
                         tooltip: 'Edit Data',
                       ),
-                      currentCandi.isFavorite
+                      isSignedIn && currentCandi.isFavorite
                           ? IconButton(
                               onPressed: () async {
                                 if (currentCandi.id != null) {

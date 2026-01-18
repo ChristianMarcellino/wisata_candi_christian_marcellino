@@ -16,7 +16,7 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  bool isSignedIn = true;
+  bool isSignedIn = false;
   String fullName = '';
   String userName = '';
   int favoriteCandiCount = 0;
