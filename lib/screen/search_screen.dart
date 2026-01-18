@@ -59,6 +59,7 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   void initState() {
     super.initState();
+    _loadCandiData();
     _searchController.addListener(_filterCandis);
   }
 
@@ -74,9 +75,9 @@ class _SearchScreenState extends State<SearchScreen> {
     setState(() {
       searchQuery = _searchController.text.toLowerCase().trim();
       if (searchQuery.isEmpty) {
-        _filteredCandis = candiList;
+        _filteredCandis = _allCandis;
       } else {
-        _filteredCandis = candiList.where((candi) {
+        _filteredCandis = _allCandis.where((candi) {
           return candi.name.toLowerCase().contains(searchQuery) ||
               candi.location.toLowerCase().contains(searchQuery) ||
               candi.type.toLowerCase().contains(searchQuery);
@@ -161,6 +162,8 @@ class _SearchScreenState extends State<SearchScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
                                 candi.name,
                                 style: TextStyle(
                                   fontSize: 16,

@@ -22,14 +22,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int favoriteCandiCount = 0;
   String _imageFile = '';
   final picker = ImagePicker();
+  TextEditingController? _fullnameController = TextEditingController();
 
   Future<void> _getImage(ImageSource source) async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
     final pickedFile = await picker.pickImage(source: source);
     if (pickedFile != null) {
+      prefs.setString('profileImage', pickedFile.path);
       setState(() {
         _imageFile = pickedFile.path;
       });
     }
+  }
+
+  void changeName() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Change Name'),
+          content: TextField(
+            controller: _fullnameController,
+            decoration: InputDecoration(hintText: "Enter your new full name"),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text('Cancel'),
+            ),
+            TextButton(
+              onPressed: () async {
+                final prefs = await SharedPreferences.getInstance();
+                await prefs.setString('fullName', _fullnameController!.text);
+                setState(() {
+                  fullName = _fullnameController!.text;
+                });
+                Navigator.of(context).pop();
+              },
+              child: Text('Save'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -44,7 +81,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       fullName = prefs.getString('fullName') ?? '';
       userName = prefs.getString('username') ?? '';
       isSignedIn = prefs.getBool('isSignedIn') ?? false;
+      _imageFile = prefs.getString("profileImage") ?? '';
       favoriteCandiCount = 0;
+      _fullnameController = TextEditingController(text: fullName);
     });
     final dbHelper = DatabaseHelper();
     final favoriteCandis = await dbHelper.getFavoriteCandi();
@@ -66,6 +105,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     setState(() {
       isSignedIn = false;
+      fullName = "";
+      userName = "";
+      favoriteCandiCount = 0;
+      _imageFile = "";
     });
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -97,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.photo_library_outlined),
+              leading: Icon(Icons.camera_alt_outlined),
               title: Text("Camera"),
               onTap: () {
                 Navigator.of(context).pop(_getImage(ImageSource.camera));
@@ -107,6 +150,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _fullnameController?.dispose();
+    super.dispose();
   }
 
   @override
@@ -152,7 +201,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onPressed: _showPicker,
                             icon: Icon(
                               Icons.camera_alt,
-                              color: Colors.deepPurple[60],
+                              color: Colors.deepPurple[50],
                             ),
                           ),
                       ],
@@ -178,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   value: fullName,
                   showEditIcon: isSignedIn,
                   onEditPressed: () {
-                    debugPrint('Icon edit ditekan');
+                    changeName();
                   },
                   iconColor: Colors.blue,
                 ),

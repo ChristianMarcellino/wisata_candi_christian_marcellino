@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wisata_candi/main.dart';
 import 'package:wisata_candi/screen/home_screen.dart';
 import 'package:wisata_candi/screen/sign_up_screen.dart';
 
@@ -58,7 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute<void>(builder: (context) => HomeScreen()),
+          MaterialPageRoute<void>(builder: (context) => MainScreen()),
         );
       });
     } else {

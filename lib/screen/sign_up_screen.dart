@@ -125,7 +125,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: InputDecoration(
                       labelText: 'Nama Lengkap',
                       border: OutlineInputBorder(),
-                      errorText: _errorTextFullname,
+                      errorText: _errorTextFullname.isNotEmpty
+                          ? _errorTextFullname
+                          : null,
                     ),
                   ),
                   SizedBox(height: 16),
@@ -134,7 +136,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: InputDecoration(
                       labelText: 'Nama Pengguna',
                       border: OutlineInputBorder(),
-                      errorText: _errorTextUsername,
+                      errorText: _errorTextUsername.isNotEmpty
+                          ? _errorTextUsername
+                          : null,
                     ),
                   ),
                   // TODO 6 : TextFormField Password
@@ -144,7 +148,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     decoration: InputDecoration(
                       labelText: 'Password',
                       border: OutlineInputBorder(),
-                      errorText: _errorTextPassword,
+                      errorText: _errorTextPassword.isNotEmpty
+                          ? _errorTextPassword
+                          : null,
                       suffixIcon: IconButton(
                         onPressed: () {
                           setState(() {

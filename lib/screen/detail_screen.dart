@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wisata_candi/Helpers/database_helper.dart';
 import 'package:wisata_candi/models/candi.dart';
-import 'package:wisata_candi/screen/profile_screen.dart';
-import 'package:wisata_candi/screen/sign_in_screen.dart';
+import 'package:wisata_candi/screen/edit_candi_screen.dart';
 
 class DetailScreen extends StatefulWidget {
   final Candi placeholder;
@@ -45,6 +44,31 @@ class _DetailScreenState extends State<DetailScreen> {
         });
       }
     }
+  }
+
+  void _zoomImage(String imageUrl) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          backgroundColor: Colors.black,
+          insetPadding: EdgeInsets.zero,
+          child: GestureDetector(
+            onTap: () => Navigator.pop(context),
+            child: InteractiveViewer(
+              child: CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.contain,
+                placeholder: (context, url) =>
+                    Center(child: CircularProgressIndicator()),
+                errorWidget: (context, url, error) =>
+                    Icon(Icons.error, color: Colors.white),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -95,6 +119,25 @@ class _DetailScreenState extends State<DetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(currentCandi.name),
+                      IconButton(
+                        onPressed: () async {
+                          final updatedCandi = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  EditCandiScreen(candi: currentCandi),
+                            ),
+                          );
+
+                          if (updatedCandi != null) {
+                            await _loadCandiData();
+                            print('🔄 Data refreshed after edit');
+                          }
+                        },
+                        icon: Icon(Icons.edit),
+                        color: Colors.blue,
+                        tooltip: 'Edit Data',
+                      ),
                       currentCandi.isFavorite
                           ? IconButton(
                               onPressed: () async {
@@ -217,7 +260,9 @@ class _DetailScreenState extends State<DetailScreen> {
                         return Padding(
                           padding: EdgeInsets.only(right: 8),
                           child: GestureDetector(
-                            onTap: () {},
+                            onTap: () {
+                              _zoomImage(currentCandi.imageUrls[index]);
+                            },
                             child: Container(
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
@@ -255,23 +300,6 @@ class _DetailScreenState extends State<DetailScreen> {
                   ),
                 ],
               ),
-            ),
-            Row(
-              children: [
-                Padding(
-                  padding: EdgeInsets.all(8),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute<void>(
-                          builder: (context) => const ProfileScreen(),
-                        ),
-                      );
-                    },
-                    child: Icon(Icons.person),
-                  ),
-                ),
-              ],
             ),
           ],
         )),

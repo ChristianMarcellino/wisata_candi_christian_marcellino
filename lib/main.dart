@@ -47,6 +47,7 @@ void main() async {
   runApp(
     MaterialApp(
       title: "Wisata Candi di Indonesia",
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         appBarTheme: const AppBarTheme(
           iconTheme: IconThemeData(color: Colors.deepPurple, opacity: 21),
