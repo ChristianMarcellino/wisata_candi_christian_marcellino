@@ -15,7 +15,7 @@ var candiList = [
       'https://media-cdn.tripadvisor.com/media/photo-o/11/cd/4d/c7/borobudur-and-the-sky.jpg',
       'https://media-cdn.tripadvisor.com/media/photo-o/11/cd/47/0e/borobudur-sunset-moment.jpg',
     ],
-    isFavorite: false,
+    isFavorite: true,
     sumFavorite: 100,
     visitingHours: "200",
   ),
