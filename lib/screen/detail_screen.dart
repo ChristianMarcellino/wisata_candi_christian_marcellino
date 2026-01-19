@@ -119,7 +119,7 @@ class _DetailScreenState extends State<DetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(currentCandi.name),
-                      IconButton(
+                      if(isSignedIn) IconButton(
                         onPressed: () async {
                           final updatedCandi = await Navigator.push(
                             context,
@@ -138,7 +138,7 @@ class _DetailScreenState extends State<DetailScreen> {
                         color: Colors.blue,
                         tooltip: 'Edit Data',
                       ),
-                      isSignedIn && currentCandi.isFavorite
+                      if(isSignedIn) currentCandi.isFavorite
                           ? IconButton(
                               onPressed: () async {
                                 if (currentCandi.id != null) {
