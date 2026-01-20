@@ -35,12 +35,13 @@ void main() async {
       rethrow;
     }
   }
+  
 
-  if (!kIsWeb) {
+  if (kIsWeb) {
     try {
       await _initializeDatabase();
     } catch (e) {
-      print('❌ Error initializing database: $e');
+      print("Error Initializing Database $e");
     }
   }
 

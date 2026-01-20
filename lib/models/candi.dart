@@ -36,6 +36,8 @@ class Candi {
       'imageAsset': imageAsset,
       'imageUrls': imageUrls.join(','),
       'isFavorite': isFavorite ? 1 : 0,
+      'visitingHours' : visitingHours,
+      'sumFavorite' : sumFavorite,
     };
   }
 

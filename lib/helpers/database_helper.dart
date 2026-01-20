@@ -4,7 +4,7 @@ import '../models/candi.dart';
 import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'dart:io' as io;
+import 'dart:io' show Platform;
 import 'package:path_provider/path_provider.dart';
 
 class DatabaseHelper {
@@ -27,14 +27,16 @@ class DatabaseHelper {
     // Untuk Web platform
     if (kIsWeb) {
       databaseFactory = databaseFactoryFfiWeb;
-      return await openDatabase(
+      return await databaseFactory.openDatabase(
         'wisata_candi.db',
-        version: 1,
-        onCreate: _onCreate,
+          options: OpenDatabaseOptions(
+            version: 1,
+            onCreate: _onCreate,
+          ),
       );
     }
 
-    if (io.Platform.isWindows || io.Platform.isLinux || io.Platform.isMacOS) {
+    if (Platform.isWindows || Platform.isLinux || Platform.isMacOS) {
       sqfliteFfiInit();
       databaseFactory = databaseFactoryFfi;
       final appDocumentsDirectory = await getApplicationDocumentsDirectory();
@@ -60,7 +62,9 @@ class DatabaseHelper {
       type TEXT NOT NULL,
       imageAsset TEXT NOT NULL,
       imageUrls TEXT NOT NULL,
-      isFavorite INTEGER NOT NULL DEFAULT 0
+      isFavorite INTEGER NOT NULL DEFAULT 0,
+      visitingHours TEXT NOT NULL,
+      sumFavorite INTEGER NOT NULL
     )
   ''');
   }

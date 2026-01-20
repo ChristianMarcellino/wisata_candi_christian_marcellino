@@ -2,6 +2,7 @@ import 'package:wisata_candi/models/candi.dart';
 
 var candiList = [
   Candi(
+    id: 1,
     name: 'Candi Borobudur',
     location: 'Magelang, Jawa Tengah',
     description:
@@ -20,6 +21,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 2,
     name: 'Candi Mendut',
     location: 'Magelang, Jawa Tengah',
     description:
@@ -38,6 +40,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 3,
     name: 'Candi Prambanan',
     location: 'Daerah Istimewa Yogyakarta',
     description:
@@ -56,6 +59,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 4,
     name: 'Candi Lumbung',
     location: 'Klaten, Jawa Tengah',
     description:
@@ -74,6 +78,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 5,
     name: 'Candi Sewu',
     location: 'Klaten, Jawa Tengah',
     description:
@@ -92,6 +97,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 6,
     name: 'Candi Kalasan',
     location: 'Daerah Istimewa Yogyakarta',
     description:
@@ -110,6 +116,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 7,
     name: 'Candi Sari',
     location: 'Daerah Istimewa Yogyakarta',
     description:
@@ -128,6 +135,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 8,
     name: 'Candi Plaosan',
     location: 'Klaten, Jawa Tengah',
     description:
@@ -146,6 +154,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 9,
     name: 'Candi Singosari',
     location: 'Malang, Jawa Timur',
     description:
@@ -164,6 +173,7 @@ var candiList = [
     visitingHours: "200",
   ),
   Candi(
+    id: 10,
     name: 'Candi Jago',
     location: 'Malang, Jawa Timur',
     description:
