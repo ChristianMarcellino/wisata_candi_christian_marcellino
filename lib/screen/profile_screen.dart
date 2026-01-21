@@ -237,9 +237,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ProfileInfoItem(
                   icon: Icons.favorite,
                   label: 'Favorit',
-                  value: favoriteCandiCount > 0
-                      ? '$favoriteCandiCount'
-                      : 'Belum Ada Candi Favorit',
+                  value: isSignedIn
+                      ? favoriteCandiCount > 0
+                            ? '$favoriteCandiCount'
+                            : 'Belum Ada Candi Favorit'
+                      : "Sign in sebelum melihat favorit",
                   iconColor: Colors.red,
                 ),
                 SizedBox(height: 4),
