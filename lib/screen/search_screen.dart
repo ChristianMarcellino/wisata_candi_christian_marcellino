@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:wisata_candi/Helpers/database_helper.dart';
+import 'package:wisata_candi/helpers/database_helper.dart';
 import 'package:wisata_candi/data/candi_data.dart';
 import 'package:wisata_candi/models/candi.dart';
 import 'package:wisata_candi/screen/detail_screen.dart';

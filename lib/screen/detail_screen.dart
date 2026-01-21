@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wisata_candi/Helpers/database_helper.dart';
+import 'package:wisata_candi/helpers/database_helper.dart';
 import 'package:wisata_candi/models/candi.dart';
 import 'package:wisata_candi/screen/edit_candi_screen.dart';
 
@@ -119,59 +119,61 @@ class _DetailScreenState extends State<DetailScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(currentCandi.name),
-                      if(isSignedIn) IconButton(
-                        onPressed: () async {
-                          final updatedCandi = await Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  EditCandiScreen(candi: currentCandi),
-                            ),
-                          );
-
-                          if (updatedCandi != null) {
-                            await _loadCandiData();
-                            print('🔄 Data refreshed after edit');
-                          }
-                        },
-                        icon: Icon(Icons.edit),
-                        color: Colors.blue,
-                        tooltip: 'Edit Data',
-                      ),
-                      if(isSignedIn) currentCandi.isFavorite
-                          ? IconButton(
-                              onPressed: () async {
-                                if (currentCandi.id != null) {
-                                  await _dbHelper.toggleFavorite(
-                                    currentCandi.id!,
-                                    currentCandi.isFavorite,
-                                  );
-                                  setState(() {
-                                    currentCandi.isFavorite =
-                                        !currentCandi.isFavorite;
-                                  });
-                                }
-                              },
-                              icon: Icon(Icons.favorite, color: Colors.red),
-                            )
-                          : IconButton(
-                              onPressed: () async {
-                                if (currentCandi.id != null) {
-                                  await _dbHelper.toggleFavorite(
-                                    currentCandi.id!,
-                                    currentCandi.isFavorite,
-                                  );
-                                  setState(() {
-                                    currentCandi.isFavorite =
-                                        !currentCandi.isFavorite;
-                                  });
-                                }
-                              },
-                              icon: Icon(
-                                Icons.favorite_border_outlined,
-                                color: Colors.red,
+                      if (isSignedIn)
+                        IconButton(
+                          onPressed: () async {
+                            final updatedCandi = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    EditCandiScreen(candi: currentCandi),
                               ),
-                            ),
+                            );
+
+                            if (updatedCandi != null) {
+                              await _loadCandiData();
+                              print('🔄 Data refreshed after edit');
+                            }
+                          },
+                          icon: Icon(Icons.edit),
+                          color: Colors.blue,
+                          tooltip: 'Edit Data',
+                        ),
+                      if (isSignedIn)
+                        currentCandi.isFavorite
+                            ? IconButton(
+                                onPressed: () async {
+                                  if (currentCandi.id != null) {
+                                    await _dbHelper.toggleFavorite(
+                                      currentCandi.id!,
+                                      currentCandi.isFavorite,
+                                    );
+                                    setState(() {
+                                      currentCandi.isFavorite =
+                                          !currentCandi.isFavorite;
+                                    });
+                                  }
+                                },
+                                icon: Icon(Icons.favorite, color: Colors.red),
+                              )
+                            : IconButton(
+                                onPressed: () async {
+                                  if (currentCandi.id != null) {
+                                    await _dbHelper.toggleFavorite(
+                                      currentCandi.id!,
+                                      currentCandi.isFavorite,
+                                    );
+                                    setState(() {
+                                      currentCandi.isFavorite =
+                                          !currentCandi.isFavorite;
+                                    });
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.favorite_border_outlined,
+                                  color: Colors.red,
+                                ),
+                              ),
                     ],
                   ),
                   SizedBox(height: 16),

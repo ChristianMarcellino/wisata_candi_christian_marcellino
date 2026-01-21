@@ -35,14 +35,11 @@ void main() async {
       rethrow;
     }
   }
-  
 
-  if (kIsWeb) {
-    try {
-      await _initializeDatabase();
-    } catch (e) {
-      print("Error Initializing Database $e");
-    }
+  try {
+    await _initializeDatabase();
+  } catch (e) {
+    print("Error Initializing Database $e");
   }
 
   runApp(
